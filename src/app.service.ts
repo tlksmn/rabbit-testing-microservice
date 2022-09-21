@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { tap } from 'rxjs';
-import { MicroservicesTopic } from './enums/enums';
+import { MicroservicesTopic, SystemLogTopics } from './enums/enums';
 
 interface GetNewsParamsI {
   search?: string;
@@ -35,52 +35,15 @@ export class AppService implements OnModuleInit {
 
   async onModuleInit() {
     await this.client.connect();
-    for (let i = 99; i < 109; i++) {
-      this.getNewsById(i + 2);
+
+    for (let i = 0; i < 2; i++) {
+      this.formSystemLog();
     }
   }
 
-  createNews(news: {
-    publishType: string;
-    title: string;
-    body: string;
-    status: string;
-    photo?: string;
-  }) {
+  formSystemLog() {
     return this.client
-      .send(MicroservicesTopic.formNews, news)
-      .pipe(tap((e) => console.log(e, 'ewe')))
-      .subscribe({ error: console.log, complete: console.log });
-  }
-
-  createNotification(notifications: {
-    isAll: boolean;
-    usersId: number[];
-    message: string;
-  }) {
-    return this.client
-      .send(MicroservicesTopic.notificationCreate, notifications)
-      .pipe(tap((e) => console.log(e, 'ewe')))
-      .subscribe({ error: console.log, complete: console.log });
-  }
-
-  updateNews(news: FormNewsParamsI) {
-    return this.client
-      .send(MicroservicesTopic.formNews, news)
-      .pipe(tap((e) => console.log(e)))
-      .subscribe({ error: console.log, complete: console.log });
-  }
-
-  getNews(params: GetNewsParamsI) {
-    return this.client
-      .send(MicroservicesTopic.getNews, params)
-      .pipe(tap((e) => console.log(e)))
-      .subscribe({ error: console.log, complete: console.log });
-  }
-
-  getNewsById(id) {
-    return this.client
-      .send(MicroservicesTopic.getOneByIdNews, { id })
+      .send(SystemLogTopics.formSystemLogs, {})
       .pipe(tap((e) => console.log(e)))
       .subscribe({ error: console.log, complete: console.log });
   }

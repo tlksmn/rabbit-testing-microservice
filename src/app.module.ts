@@ -11,7 +11,7 @@ import { AppService } from './app.service';
         transport: Transport.RMQ,
         options: {
           urls: [`amqp://localhost:5672`],
-          queue: `notification_queue_2`,
+          queue: `logs_queue`,
           queueOptions: {
             durable: false,
           },
